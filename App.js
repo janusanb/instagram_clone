@@ -23,7 +23,7 @@ import thunk from 'redux-thunk' // allows use of dispatch funciton, simplifying 
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
-if (firebase.apps.length === 0){
+if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig)
 }
 
@@ -33,21 +33,22 @@ import { createStackNavigator } from '@react-navigation/stack'
 import LandingScreen from "./components/auth/Landing"
 import RegisterScreen from "./components/auth/Register"
 import MainScreen from './components/Main'
+import AddScreen from './components/main/Add' // it is put here because pressing the AddScreen means we want to create a new screen
 
 const Stack = createStackNavigator();
 
 export class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loaded: false
     }
   }
 
-  componentDidMount(){ //in specific mount moments
+  componentDidMount() { //in specific mount moments
     // When componenent actually mounts
     firebase.auth().onAuthStateChanged((user) => {
-      if (!user){
+      if (!user) {
         this.setState({
           loggedIn: false,
           loaded: true,
@@ -63,28 +64,35 @@ export class App extends Component {
   }
   render() {
     const { loggedIn, loaded } = this.state;
-    if (!loaded){
-      return(
-        <View style = {{flex: 1, justifyContent: 'center'}}>
+    if (!loaded) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
           <Text>Loading</Text>
         </View>
       )
     }
-    if(!loggedIn){
+    if (!loggedIn) {
       return (
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Landing">
             <Stack.Screen name="Landing" component={LandingScreen} options={{ headerShown: false }}></Stack.Screen>
-            <Stack.Screen name="Register" component={RegisterScreen}/>
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
           </Stack.Navigator>
         </NavigationContainer>
       );
     }
 
-    return(
+    return (
       // this is the only way of accessing redux
-      <Provider store={store}> 
-        <MainScreen />
+      // main screen in a stack is done so when taking a picture in instagram sends user to differnt screen
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Landing">
+            <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }}></Stack.Screen>
+            <Stack.Screen name="Add" component={AddScreen}></Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
       </Provider>
 
     )
