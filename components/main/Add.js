@@ -4,7 +4,7 @@ import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { NavigationContainer } from '@react-navigation/native';
 
-export default function Add(navigation) {
+export default function App() {
     const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
     const [hasPermission, setHasPermission] = useState(null); //this is like this.state and in this case null, does same thing as state
     const [camera, setCamera] = useState(null);
@@ -24,7 +24,7 @@ export default function Add(navigation) {
 
     // aync because we will have a await so it can take a picture and lock the code until the picutre is taken
     const takePicture = async () => {
-        if(camera){
+        if (camera) {
             const data = await camera.takePictureAsync(null);
             //when picutre is taken it is saved in a temp folder and we are going to see what the URI is //console.log(data.uri) 
             setImage(data.uri)
@@ -36,18 +36,18 @@ export default function Add(navigation) {
     //Function to pick image (stock function)
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images, //MediaType is an inum and we can pick between 3 options 
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 1,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images, //MediaType is an inum and we can pick between 3 options 
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
         });
-    
+
         console.log(result);
-    
+
         if (!result.cancelled) {
-          setImage(result.uri);
+            setImage(result.uri);
         }
-      };
+    };
 
     if (hasPermission === null || hasGalleryPermission == false) {
         return <View />;
@@ -66,11 +66,6 @@ export default function Add(navigation) {
             </View>
 
             <Button
-                style={{
-                    flex: 0.1,
-                    alignSelf: 'flex-end',
-                    alignItems: 'center'
-                }}
                 title="Flip"
                 onPress={() => {
                     setType(
@@ -84,8 +79,9 @@ export default function Add(navigation) {
 
             <Button title="Click" onPress={() => takePicture()} />
             <Button title="From Gallery " onPress={() => pickImage()} />
-            <Button title="Save" onPress={() => navigation.navigate('Save', {image})} /> {/*Save can access the image data*/}
-            {image && <Image source={{uri: image}} style={{flex: 1}}/>} 
+            {/* <Button title="Save" onPress={() => navigation.navigate('Save', { image })} /> */}
+            {/*Save can access the image data*/}
+            {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
             {/*When a picture is taken it appears below as a view*/}
         </View>
     );
