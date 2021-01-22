@@ -7,7 +7,7 @@ import firebase from 'firebase'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux' //need to bind component to redux and to fetchUser
-import { fetchUser, fetchUserPosts } from '../redux/actions/index'
+import { fetchUser, fetchUserPosts, fetchUserFollowing } from '../redux/actions/index'
 
 import FeedScreen from './main/Feed'
 import SearchScreen from './main/Search'
@@ -22,8 +22,10 @@ export class Main extends Component {
     componentDidMount() {
         //call index.js, which uses dispatch to call reducer and update state from our action
         //ultimately updating state of currentuser form what we get in our action
+        //These functions are taken from the action's area and then brought into here to be loaded
         this.props.fetchUser();
         this.props.fetchUserPosts();
+        this.props.fetchUserFollowing();
     }
     render() {
         return (
@@ -83,6 +85,6 @@ export class Main extends Component {
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser
 })
-const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts }, dispatch)//pass object that has function that we want to access
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, fetchUserFollowing }, dispatch)//pass object that has function that we want to access
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
